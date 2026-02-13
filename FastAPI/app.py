@@ -1,15 +1,21 @@
-from fastapi import FastAPI
+from fastapi import FastAPI,status
 
 app = FastAPI(title='Abir')
 
-@app.get('/',tags=['main'])
-def indexView():
+@app.post('/',tags=['main'],status_code=status.HTTP_404_NOT_FOUND)
+def indexPostView(data:str):
     return {
-        "msg" : 'Hello India'
+        "msg" : data
     }
 
-@app.get('/update',tags=['main'])
-def updateView():
+@app.get('/',tags=['main'],status_code=status.HTTP_404_NOT_FOUND)
+def indexRecieve(data:str):
     return {
-        "msg" : 'Hello Bharat'
+        "msg" : data
     }
+
+# @app.get('/update',tags=['main'])
+# def updateView():
+#     return {
+#         "msg" : 'Hello Bharat'
+#     }
