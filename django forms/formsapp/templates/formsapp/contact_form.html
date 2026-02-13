@@ -1,0 +1,80 @@
+{% load static %}
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Notes Manager</title>
+    <link rel="stylesheet" href="{% static 'formsapp/style.css' %}">
+</head>
+<body>
+<main class="container">
+
+    <h1>Chalo Baate Kare</h1>
+
+    {% if messages %}
+        {% for message in messages %}
+            <p class="alert success">{{ message }}</p>
+        {% endfor %}
+    {% endif %}
+
+    <!-- Search -->
+    <form method="get">
+        <input type="text" name="search" placeholder="Search notes..." />
+        <button type="submit">Search</button>
+    </form>
+
+    <hr>
+
+    <!-- Add Note -->
+    <form method="post" novalidate>
+        {% csrf_token %}
+        {% for field in form %}
+            <div class="field-group">
+                <label>{{ field.label }}</label>
+                {{ field }}
+                {% if field.errors %}
+                    <p class="error">{{ field.errors|striptags }}</p>
+                {% endif %}
+            </div>
+        {% endfor %}
+        <button type="submit">Save Note</button>
+    </form>
+
+    <hr>
+
+    <!-- Notes List -->
+    <h2>All Notes</h2>
+
+    {% for note in notes %}
+        <div class="note-card">
+            <h3>{{ note.title }}</h3>
+            <p>{{ note.description }}</p>
+            <small>{{ note.created_at }}</small>
+            <br>
+
+            {% if note.isPublish %}
+                <span style="color:green;">Published</span>
+            {% else %}
+                <span style="color:red;">Unpublished</span>
+            {% endif %}
+
+            <br><br>
+
+            <a href="{% url 'edit' note.id %}">Edit</a> |
+            <a href="{% url 'delete' note.id %}">Delete</a> |
+            <a href="{% url 'toggle' note.id %}">
+                {% if note.isPublish %}
+                    Unpublish
+                {% else %}
+                    Publish
+                {% endif %}
+            </a>
+
+        </div>
+        <hr>
+    {% empty %}
+        <p>No notes yet.</p>
+    {% endfor %}
+
+</main>
+</body>
+</html>
